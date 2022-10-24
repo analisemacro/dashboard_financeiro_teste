@@ -1,0 +1,182 @@
+---
+title: "Dashboard: Automatizando a coleta de dados financeiros"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    logo: logo.png
+    css: styles.css
+    social: menu
+    navbar:
+        - { icon: "fa-linkedin", href: "https://www.linkedin.com/company/an%C3%A1lise-macro/", align: right }
+        - { icon: "fa-at", href: "mailto:comercial@analisemacro.com.br", align: right }
+runtime: shiny2
+---
+
+<script>
+$('.navbar-logo').wrap('<a href="https://analisemacro.com.br/" target=_blank>');
+</script>
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(dplyr)
+library(echarts4r)
+```
+
+
+```{r dados}
+load("dados.Rdata", envir = .GlobalEnv)
+```
+
+
+## Row {.sidebar data-width="200"}
+-----------------------------------------
+
+```{r sidebar}
+shiny::selectInput(
+  inputId = "companies",
+  label = "Selecione as companhias disponíveis",
+  choices = c(names_companies),
+  multiple = FALSE,
+  selectize = TRUE,
+  selected = "VALE S.A."
+)
+```
+
+Row {data-width=575}
+--------------------------------------
+
+### DRE
+
+```{r dre}
+renderEcharts4r({
+dre |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_bar(receita_de_venda_de_bens_e_ou_servicos, name = "Receita", stack = "grp") |> 
+  e_bar(custo_dos_bens_e_ou_servicos_vendidos, name = "Custo", stack = "grp") |> 
+  e_line(lucro_prejuizo_consolidado_do_periodo, name = "Lucro/Prejuizo") |> 
+  e_title("DRE", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_legend(right = 0) |> 
+  e_theme("auritus") |> 
+  e_tooltip(trigger = "axis") 
+})
+```
+
+
+
+Row {.tabset}
+-----------------------------------------------------------------------
+### Liquidez Corrente
+
+```{r}
+renderEcharts4r({
+corrente |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(liq_corrente, legend = FALSE) |> 
+  e_title("Liquidez Corrente", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+  e_tooltip(trigger = "axis") 
+})
+```
+
+### Liquidez Geral
+
+```{r}
+renderEcharts4r({
+geral |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(liq_geral, legend = FALSE) |> 
+  e_title("Liquidez Geral", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+     e_tooltip(trigger = "axis") 
+})
+```
+
+### Endividamento Terceiros / Capital Próprio
+
+```{r}
+renderEcharts4r({
+tcp |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(tcp, legend = FALSE) |> 
+  e_title("Endividamento Terceiros / Capital Próprio", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+     e_tooltip(trigger = "axis") 
+})
+```
+
+### Endividamento Terceiros / Passivo Total
+
+```{r}
+renderEcharts4r({
+tct |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(tct, legend = FALSE) |> 
+  e_title("Endividamento Terceiros / Passivo Total", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+   e_tooltip(trigger = "axis") 
+})
+```
+
+### ROA 
+
+
+```{r}
+renderEcharts4r({
+roa |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(roa, legend = FALSE) |> 
+  e_title("Return on Asset", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+  e_tooltip(trigger = "axis") 
+})
+```
+
+### ROE
+
+```{r}
+renderEcharts4r({
+roe |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(roe, legend = FALSE) |> 
+  e_title("Return on Equity", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+  e_tooltip(trigger = "axis") 
+})
+```
+
+### Margem Bruta
+
+```{r}
+renderEcharts4r({
+margem_bruta |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(margem_bruta, legend = FALSE) |> 
+  e_title("Margem Bruta", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+  e_tooltip(trigger = "axis") 
+})
+```
+
+### Margem Líquida
+
+```{r}
+renderEcharts4r({
+margem_liq |> 
+  filter(denom_cia == input$companies) |> 
+  e_charts(x = dt_refer) |> 
+  e_area(margem_liq, legend = FALSE) |> 
+  e_title("Margem Líquida", "Fonte: CVM/B3 | Elaborado por analisemacro.com.br") |> 
+  e_theme("auritus") |> 
+  e_tooltip(trigger = "axis") 
+})
+```
+
