@@ -1,0 +1,11 @@
+name: dashboard_financeiro_teste
+title:
+username:
+account: analisemacro
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7406883
+bundleId: 6436994
+url: https://analisemacro.shinyapps.io/dashboard_financeiro_teste/
+when: 1666652506.29455
+lastSyncTime: 1666652506.29456
