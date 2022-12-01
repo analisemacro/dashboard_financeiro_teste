@@ -5,7 +5,7 @@ account: analisemacro
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7406883
-bundleId: 6462753
+bundleId: 6576551
 url: https://analisemacro.shinyapps.io/dashboard_financeiro_teste/
-when: 1667294877.08884
-lastSyncTime: 1667294877.08884
+when: 1669886864.92355
+lastSyncTime: 1669886864.92356
